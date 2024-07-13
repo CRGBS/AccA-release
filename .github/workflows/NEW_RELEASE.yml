@@ -41,7 +41,7 @@ jobs:
         uses: nttld/setup-ndk@v1.5.0
         with:
           # Exact version to use
-          ndk-version: 25.2.9519653
+          ndk-version: r26d
     # Add installation directory to the PATH
       #- name: Install latest build tools
       #  run: |
