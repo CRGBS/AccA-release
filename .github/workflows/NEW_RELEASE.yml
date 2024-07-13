@@ -29,14 +29,22 @@ jobs:
           distribution: 'temurin'
           java-version: 16
           check-latest: true
-
-      - name: Install latest build tools
+          
+      - name: Install Android SDK packages
+        env:
+          ANDROID_HOME: ${{ github.workspace }}/android-sdk
+          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
         run: |
-          echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "build-tools;33.0.1" --sdk_root=${ANDROID_SDK_ROOT}
+          mkdir -p $ANDROID_SDK_ROOT
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "build-tools;33.0.1"
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "ndk;25.2.9519653"
+      #- name: Install latest build tools
+      #  run: |
+      #    echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "build-tools;33.0.1" --sdk_root=${ANDROID_SDK_ROOT}
 
-      - name: Install NDK
-        run: |
-          echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;25.2.9519653" --sdk_root=${ANDROID_SDK_ROOT}
+      #- name: Install NDK
+      #  run: |
+      #    echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;25.2.9519653" --sdk_root=${ANDROID_SDK_ROOT}
 
       - name: Gradle Build
         uses: gradle/gradle-build-action@v2
