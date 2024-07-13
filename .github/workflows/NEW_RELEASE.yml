@@ -39,6 +39,10 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: nttld/setup-ndk@afb4c9964b521afb97c864b7d40b11e6911bd410
         uses: nttld/setup-ndk@v1.5.0
+        with:
+          # Exact version to use
+          ndk-version: 25.2.9519653
+    # Add installation directory to the PATH
       #- name: Install latest build tools
       #  run: |
       #    echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "build-tools;33.0.1" --sdk_root=${ANDROID_SDK_ROOT}
