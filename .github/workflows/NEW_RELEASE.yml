@@ -70,3 +70,4 @@ jobs:
           body: Bump Version
           files: |
             ./app/build/outputs/apk/debug/app-debug.apk
+          tag_name: ${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}
