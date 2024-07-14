@@ -60,7 +60,7 @@ jobs:
       - name: Uploading Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/app-debug.apk
+          path: /home/runner/work/AccA-release
           name: ${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}
 
       - name: Releases
@@ -68,5 +68,5 @@ jobs:
         with:
           body: Bump Version
           files: |
-            /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/app-debug.apk
+            /home/runner/work/AccA-release
           tag_name: release
