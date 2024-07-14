@@ -60,41 +60,14 @@ jobs:
       - name: Uploading Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/
+          path: /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/*.apk 
           name: apk
           
-
-      - name: Create Release
-        uses: actions/github-script@v3
+      - name: Releases
+        uses: softprops/action-gh-release@v1
         with:
+          body: Bump Version
           github-token: ${{secrets.FORBD}}
-          script: |
-            console.log('environment', process.versions);
-            const fs = require('fs').promises;
-            const { repo: { owner, repo }, sha } = context;
-            console.log({ owner, repo, sha });
-            const release = await github.repos.createRelease({
-              owner, repo,
-              tag_name: process.env.GITHUB_REF,
-              draft: true,
-              target_commitish: sha
-            });
-            console.log('created release', { release });
-            for (let file of await fs.readdir('.')) {
-              // do whatever filtering you want here, I'm just uploading all the files
-              console.log('uploading', file);
-              await github.repos.uploadReleaseAsset({
-                owner, repo,
-                release_id: release.data.id,
-                name: file,
-                data: await fs.readFile(`./${file}`)
-              });            
-            }
-            
-      #- name: Releases
-      #  uses: softprops/action-gh-release@v1
-      #  with:
-      #    body: Bump Version
-      #    files: |
-      #      /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/
-      #    tag_name: release
+          files: |
+            /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/*.apk 
+          tag_name: release
