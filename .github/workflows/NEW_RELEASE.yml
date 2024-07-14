@@ -61,28 +61,35 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: /home/runner/work/AccA-release/AccA-release/app/build/outputs/apk/debug/
-          name: ${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}
+          name: apk
           
-      - name: Upload release
-        id: upload_release
+
+      - name: Create Release
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.FORBD}}
           script: |
-            const path = require('path');
-            const fs = require('fs');
-            const release_id = '${{ steps.create_release.outputs.id }}';
-            for (let file of await fs.readdirSync('./artifact')) {
-              if (path.extname(file) === '.zip') {
-                console.log('uploadReleaseAsset', file);
-                await github.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: release_id,
-                  name: file,
-                  data: await fs.readFileSync(`./artifact/${file}`)
-                });
-              }
+            console.log('environment', process.versions);
+            const fs = require('fs').promises;
+            const { repo: { owner, repo }, sha } = context;
+            console.log({ owner, repo, sha });
+            const release = await github.repos.createRelease({
+              owner, repo,
+              tag_name: process.env.GITHUB_REF,
+              draft: true,
+              target_commitish: sha
+            });
+            console.log('created release', { release });
+            for (let file of await fs.readdir('.')) {
+              // do whatever filtering you want here, I'm just uploading all the files
+              console.log('uploading', file);
+              await github.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: release.data.id,
+                name: file,
+                data: await fs.readFile(`./${file}`)
+              });            
+            }
             
       #- name: Releases
       #  uses: softprops/action-gh-release@v1
